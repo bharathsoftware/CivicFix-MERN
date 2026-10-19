@@ -179,7 +179,7 @@ Before publishing or deploying the application, verify:
 
 ## Author
 
-**BharathKumar**
+**Bharathkumar**
 
 GitHub: https://github.com/bharathsoftware
 
