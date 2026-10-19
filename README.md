@@ -1,106 +1,187 @@
-# CivicFix — MERN Community Issue Reporting Platform
+# CivicFix — Smart Public Issue Reporting Platform
 
-CivicFix is a full-stack community platform for reporting and tracking local civic issues such as potholes, garbage, broken streetlights, and water leaks.
+CivicFix is a full-stack MERN web application that helps citizens report public issues such as potholes, garbage accumulation, damaged streetlights, and water leaks. It provides a centralized platform to track reported issues and monitor their resolution status.
 
 ## Features
 
-- Responsive React + Vite interface
-- Register and log in with JWT authentication
-- Create civic issue reports
-- Browse, search, filter, and sort reports
-- View issue details and status
-- Report ownership: users can edit/delete their own reports
-- Admin role support for updating issue status
-- MongoDB persistence with Mongoose
-- Input validation, centralized API errors, and password hashing
-- Demo seed data endpoint for local development (optional)
+- **Report Public Issues** — Submit complaints with a title, description, category, and location.
+- **Issue Tracking** — Track issue progress from Reported to Assigned, In Progress, and Resolved.
+- **User Authentication** — Secure access using JSON Web Tokens (JWT), when configured.
+- **REST API** — Backend endpoints for managing issues and application data.
+- **Database Persistence** — Store and retrieve issue records using MongoDB.
+- **Responsive Interface** — Designed for desktop and mobile screens.
+- **Role-Based Access** — Supports separating citizen and staff permissions when implemented and configured.
 
-> This is a local-development starter. Before production, configure HTTPS, secure secrets, rate limiting, email verification/password reset, moderation, and deployment-specific CORS.
+## Tech Stack
 
-## Requirements
+**Frontend**
+- React.js
+- Vite
+- JavaScript
+- HTML5
+- CSS3
 
-- Node.js 20+ recommended
-- MongoDB Atlas account or local MongoDB
-- Git (optional)
+**Backend**
+- Node.js
+- Express.js
+- REST APIs
+- JWT authentication
 
-## 1. Configure the backend
+**Database**
+- MongoDB
+- Mongoose
 
-Open a terminal:
+**Tools**
+- Git
+- GitHub
+- Visual Studio Code
+- npm
+
+## Project Structure
+
+```text
+CivicFix-MERN/
+├── client/              # React frontend
+│   ├── src/
+│   ├── public/
+│   ├── .env.example
+│   └── package.json
+├── server/              # Express backend
+│   ├── models/
+│   ├── routes/
+│   ├── .env.example
+│   └── package.json
+├── .gitignore
+└── README.md
+```
+
+*Folder and file names may vary slightly depending on your current implementation.*
+
+## Prerequisites
+
+Install the following before running the project:
+
+- [Node.js](https://nodejs.org/) (LTS recommended)
+- npm (included with Node.js)
+- A [MongoDB Atlas](https://www.mongodb.com/atlas) account or a local MongoDB instance
+- Git
+
+## Installation and Setup
+
+### 1. Clone the repository
+
+```bash
+git clone https://github.com/bharathsoftware/CivicFix-MERN.git
+cd CivicFix-MERN
+```
+
+### 2. Install backend dependencies
 
 ```bash
 cd server
 npm install
 ```
 
-Copy `.env.example` to `.env`, then fill in your MongoDB connection string and a long random JWT secret.
+Create a `.env` file inside the `server` folder using the provided `.env.example` as a reference. Fill in the actual values for your environment.
+
+Example configuration:
 
 ```env
 PORT=5000
-MONGODB_URI=mongodb+srv://<db-user>:<db-password>@<cluster-host>/civicfix?retryWrites=true&w=majority
-JWT_SECRET=replace-with-a-long-random-secret
+MONGODB_URI=your_mongodb_connection_string
+JWT_SECRET=your_long_random_secret
 CLIENT_URL=http://localhost:5173
-ADMIN_EMAIL=admin@example.com
 ```
 
-Do not commit `.env` or share database credentials.
+**Important:** Use the exact variable names required by your backend code. Never commit real database credentials, JWT secrets, or `.env` files to GitHub.
 
-Start the API:
+### 3. Start the backend
+
+From the `server` folder, run the development command defined in `server/package.json`. If the script is named `dev`, use:
 
 ```bash
 npm run dev
 ```
 
-You should see `MongoDB connected` and `CivicFix API listening on port 5000`.
+The backend should start on the configured port, commonly `http://localhost:5000`.
 
-## 2. Configure the frontend
+### 4. Install frontend dependencies
 
-Open a second terminal:
+Open a **second terminal** from the project root:
 
 ```bash
 cd client
 npm install
 ```
 
-Create `client/.env`:
+Create the frontend `.env` file if required by your application. Check `client/.env.example` for the expected variable names.
 
-```env
-VITE_API_URL=http://localhost:5000/api
-```
+For Vite, frontend environment variables exposed to browser code generally use the `VITE_` prefix. Never put secrets in frontend environment variables.
 
-Start React:
+### 5. Start the frontend
+
+From the `client` folder, run:
 
 ```bash
 npm run dev
 ```
 
-Open `http://localhost:5173`.
+Open the local URL displayed by Vite, commonly:
 
-## 3. Create an account
+http://localhost:5173
 
-Use the Register link in the website. The first account is a normal user. To grant admin privileges locally, register with the email configured in `ADMIN_EMAIL`; only do this in your own development environment. For a production deployment, role assignment must be managed securely by an administrator, not by public self-registration.
+## Application Workflow
 
-## API routes
+1. A citizen opens the CivicFix application.
+2. The citizen submits a public issue with relevant details.
+3. The backend validates the request and stores data in MongoDB.
+4. Users can view available issues and their current status.
+5. Authorized staff can update issue status if those permissions and routes are configured.
 
-### Authentication
-- `POST /api/auth/register` — `{ name, email, password }`
-- `POST /api/auth/login` — `{ email, password }`
-- `GET /api/auth/me` — authenticated current user
+## Environment Variables
 
-### Issues
-- `GET /api/issues` — public list; supports `search`, `category`, `status`, `sort`
-- `GET /api/issues/:id` — public issue details
-- `POST /api/issues` — authenticated create; `{ title, category, location, description, priority }`
-- `PATCH /api/issues/:id` — owner can edit own report; admin can update status
-- `DELETE /api/issues/:id` — owner or admin
+Keep all credentials in local `.env` files or your deployment provider's environment settings.
 
-### Health
-- `GET /api/health`
+Typical backend variables include:
 
-## Suggested production upgrades
+| Variable | Purpose |
+|---|---|
+| `PORT` | Backend server port |
+| `MONGODB_URI` | MongoDB connection string |
+| `JWT_SECRET` | Secret used for signing JWTs |
+| `CLIENT_URL` | Frontend origin for CORS configuration |
 
-1. Email verification and password reset
-2. Image upload to Cloudinary/S3 with file validation
-3. Rate limiting and abuse reporting
-4. Audit logs and admin moderation dashboard
-5. Automated tests and CI
-6. Deploy frontend and API separately; set environment variables on the host
+Refer to the `.env.example` files in the repository for the configuration your implementation expects.
+
+## Testing
+
+Before publishing or deploying the application, verify:
+
+- The frontend starts without build errors.
+- The backend starts and connects to MongoDB.
+- API endpoints return the expected responses.
+- Issues are saved and retrieved correctly.
+- Authentication and access control work if enabled.
+- The UI works on desktop and mobile screens.
+
+## GitHub Repository
+
+**Repository:** https://github.com/bharathsoftware/CivicFix-MERN
+
+## Future Enhancements
+
+- Interactive map for reported issues
+- Photo uploads for public complaints
+- Nearby and duplicate issue detection
+- Notifications when issue status changes
+- Admin dashboard with analytics
+- Deployment with a public live demo
+
+## Author
+
+**BharathKumar**
+
+GitHub: https://github.com/bharathsoftware
+
+---
+
